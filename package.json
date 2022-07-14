@@ -1,0 +1,24 @@
+{
+  "name": "grab-spread-sheet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getSpreadSheet.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gpham2/Grab-Spread-Sheet.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gpham2/Grab-Spread-Sheet/issues"
+  },
+  "homepage": "https://github.com/gpham2/Grab-Spread-Sheet#readme",
+  "dependencies": {
+    "async": "^3.2.4",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1"
+  }
+}

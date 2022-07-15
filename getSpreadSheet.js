@@ -1,8 +1,9 @@
 const axios = require("axios");
 const env = require('dotenv').config();
+const {google} = require('googleapis');
 
 const {
-    SPREADSHEET_ACCESS_TOKEN: token,
+    SERVICE_ACCOUNT_FILE_PATH: credentialsLoc
 } = process.env;
 
 
@@ -23,10 +24,18 @@ function getIdFromLink(idOrLink) {
     return idOrLink;
 }
 
-/* TODO: Request access token */
+/* Request access token from service account */
 async function getRequestToken() {
 
-    return token;
+    const auth = new google.auth.GoogleAuth({
+        keyFile: `${credentialsLoc}`,
+        scopes: 'https://www.googleapis.com/auth/spreadsheets'
+    });
+
+    const accessToken = await auth.getAccessToken()
+
+    // For some reason accessToken comes with a bunch of trailing periods
+    return accessToken.replace(/\.+$/, "");
 }
 
 
@@ -37,7 +46,6 @@ async function getSpreadSheet(idOrLink, includeGridData = false, ranges = '') {
     const id = getIdFromLink(idOrLink);
     if (id === null) {console.log("invalid Input"); return "Invalid Input"};
 
-    
     try {
         const accessToken = await getRequestToken();
         try {
@@ -65,3 +73,4 @@ async function getSpreadSheet(idOrLink, includeGridData = false, ranges = '') {
 }
 
 getSpreadSheet('https://docs.google.com/spreadsheets/d/1iKPzYZ0qNQluas8W_xkro4Q7hAbY7V_Lto1Sizw7ErM/edit#gid=0')
+//getRequestToken();

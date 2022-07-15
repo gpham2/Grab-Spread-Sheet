@@ -2,3 +2,6 @@
 .env
 
 node_modules/
+
+#service credentials
+grabspreadsheet-dcb1d12ef1df.json

@@ -1,4 +1,5 @@
-const axios = require("axios");
+const axios = require('axios');
+const { MAX_ACCESS_BOUNDARY_RULES_COUNT } = require('google-auth-library/build/src/auth/downscopedclient');
 const env = require('dotenv').config();
 const {google} = require('googleapis');
 
@@ -82,18 +83,19 @@ async function getRequestToken() {
     });
 
     const accessToken = await auth.getAccessToken()
-    return accessToken.replace(/\.+$/, "");
+    return accessToken.replace(/\.+$/, '');
 }
 
 
 /* Converts "ranges" parameter from getSpreadSheet to a numeric array of column ranges */
 function convertToMaxColumns(ranges) {
     if (typeof ranges !== 'string') return null;
+    if (ranges.match(/^((&ranges=.+![a-zA-Z][0-9]+:[a-zA-Z][0-9]+)+)$/) === null) return null;
 
     const res = [];
     const rangeList = ranges.match(/([a-zA-Z][0-9]+:[a-zA-Z][0-9]+)/g);
     rangeList.forEach(function(item) { 
-        res.push(item.charCodeAt(item.indexOf(":") + 1) - item.charCodeAt(0) + 1) 
+        res.push(item.charCodeAt(item.indexOf(':') + 1) - item.charCodeAt(0) + 1) 
     });
 
     return res;
@@ -103,7 +105,7 @@ function convertToMaxColumns(ranges) {
 async function getSpreadSheet(idOrLink, ranges) {
 
     const maxColumns = convertToMaxColumns(ranges);
-    if (maxColumns === null) { return "Ranges need to be A1 notation String" };
+    if (maxColumns === null) { return 'Ranges need to be A1 notation String' };
 
     const id = getIdFromLink(idOrLink);
     if (id === null) { return "Invalid id or link" };
@@ -119,16 +121,16 @@ async function getSpreadSheet(idOrLink, ranges) {
             try { return await parseSpreadSheet(googleSheet, maxColumns) }
 
             catch { return 'Parsing failed'}
-        } catch { return "Spreadsheet request Failed" }
-    } catch { return "Could not get Request Token" }
+        } catch { return 'Spreadsheet request Failed' }
+    } catch { return 'Could not get Request Token' }
 }
 
 
 /* For testing */
-async function test(idOrLink, ranges = '&ranges=Sheet1!A2:F6') {
+async function testThis(idOrLink, ranges = '&ranges=Sheet1!A2:F6') {
     console.log(await getSpreadSheet(idOrLink, ranges));
 }
 
 // example: ranges = '&ranges=Sheet1!A1:D5&ranges=Sheet2!A1:C4' (make sure to have the '&' and put it in that format)
 
-test('https://docs.google.com/spreadsheets/d/1oW-jfbZHd1FSP-5bpKl2lTrAUUT7tuLDMq8KPlB-vB0/edit#gid=0', '&ranges=Sheet1!A2:F6&ranges=Sheet2!A1:F6')
+module.exports = {getIdFromLink, convertToMaxColumns, parseSpreadSheet, getSpreadSheet, getRequestToken};

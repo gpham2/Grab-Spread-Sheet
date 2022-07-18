@@ -35,3 +35,6 @@ If successful, the function will output an array of arrays (representing sheets)
 Remmember that your header is based on the first row of your range. Any empty headers will be defaulted to 'UNKNOWN' and
 any empty items will be undefined. 
 
+
+## Diagram
+![Diagram](https://cdn.discordapp.com/attachments/371115539365494794/998729669924880575/unknown.png)
